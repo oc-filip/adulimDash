@@ -9,7 +9,7 @@ export default function FooterAdmin() {
             <div className="w-full px-4">
               <div className="text-sm ltr text-gray-500 font-semibold py-1 text-center">
 
-              stardash © {new Date().getFullYear()}{" "}
+              Adulim Dashboard © {new Date().getFullYear()}{" "}
                 Powered By:
                 <a
                   href="#"
