@@ -33,7 +33,7 @@ module.exports = (phase, { defaultConfig }) => {
     },
     env: {
         //NEXTAUTH_URL :"https://dash.star.co.il",
-        API_URL: "https://dash.star.co.il/api",
+        API_URL: "https://adulim-dash.vercel.app/api",
         MONGO_URI: "mongodb+srv://adulim:uMsoU1KgvAz9QwYf@cluster0.568vwt7.mongodb.net/AdulimDB?retryWrites=true&w=majority",
         JWT_SECRET: "ou5389nvx@'1=!lsdgkwrg",
         WC_URL: "https://adulim.co.il",
