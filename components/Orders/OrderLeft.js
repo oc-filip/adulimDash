@@ -481,6 +481,7 @@ export default function OrderLeft( { order } ) {
                   if(item_m.display_key !== "discount" && item_m.display_key !== "org_price" &&  item_m.display_key !== "_reduced_stock"){
                     has_meta = true
                   }
+                  
 
                       return (
                       <>  
