@@ -14,7 +14,7 @@ export default function Admin({ children }) {
   useEffect( () => {
     getSession().then((session) => {
       if(!session) {
-        window.location.href = 'https://dash.star.co.il/auth/login';
+        window.location.href = 'https://adulim-dash.vercel.app/auth/login';
       }else{
 
         console.log('Session', session)
