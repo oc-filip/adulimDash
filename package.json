@@ -1,9 +1,9 @@
 {
-  "name": "star-shop-manager",
-  "homepage": "shop-manager-dev-5f0wnse9w-filip-jonidev.vercel.app",
+  "name": "adulim-shop-manager",
+  "homepage": "adulim-dash.vercel.app",
   "version": "1.1.0",
-  "description": "Star Admin Panel",
-  "repository": "https://github.com/filip-jonidev/star-shop-manager",
+  "description": "Adulim Admin Panel",
+  "repository": "https://github.com/oc-filip/adulimDash",
   "license": "",
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^32.0.0",
@@ -63,7 +63,6 @@
     "typescript": "4.2.3"
   },
   "devDependencies": {
-    "autoprefixer": "10.2.5",
-    "postcss": "8.2.8"
+    "autoprefixer": "10.2.5"
   }
 }
