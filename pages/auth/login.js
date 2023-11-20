@@ -94,7 +94,7 @@ export default function Login() {
         <div className="flex content-center items-center justify-center h-full">
           
           <div className="w-full lg:w-3/12 px-4 mb-8">
-            <img alt="..." className="relative align-middle mx-auto border-none px-6 mb-4" src="/img/star_logo.png"/>
+            <img alt="..." className="relative align-middle mx-auto border-none px-6 mb-4" src="/img/logo.png"/>
             <p className="relative text-center font-bold text-3xl text-blueGray-600">התחברות</p>
             <p className="relative text-center font-bold  text-blueGray-600 mt-4">IP: {userIP}</p>
             <p className="relative text-center font-bold  text-blueGray-600">Country: {userCountry}</p>
