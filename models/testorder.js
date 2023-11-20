@@ -1,0 +1,60 @@
+const mongoose = require('mongoose');
+
+const TestOrderSchema = new mongoose.Schema({
+    id: { type: Number, unique: true, },
+    parent_id: { type: Number },
+    sapexport: { type: String },
+     DocNum:  { type: String },
+    DocEntry:  { type: String },
+    status: { 
+        type: String,
+        required: [true, 'Please add a status'], 
+    },
+    currency: { type: String , default: "ILS" },
+    prices_include_tax: { type: Boolean},
+    date_created: { type: String },
+    date_modified: { type: String },
+    discount_total: { type: String },
+    discount_tax:  { type: String },
+    shipping_total:  { type: String },
+    shipping_tax:  { type: String },
+    cart_tax:  { type: String },
+    total:  { type: String },
+    total_tax:  { type: String },
+    customer_id: { type: Number },
+    order_key: { type: String },
+    billing: {
+        first_name: { type: String },
+        last_name: { type: String },
+        address_1: { type: String },
+        city: { type: String },
+        email: { type: String },
+        phone: { type: Number },
+    },
+    shipping: {
+        first_name: { type: String },
+        last_name: { type: String },
+        address_1: { type: String },
+        city: { type: String },
+        email: { type: String },
+        phone: { type: Number },
+    },
+    payment_method: { type: String },
+    payment_method_title: { type: String },
+    customer_ip_address: { type: String },
+    created_via: { type: String },
+    customer_note: { type: String },
+    date_completed: { type: String },
+    date_paid: { type: String },
+    meta_data:  { type: Array },
+    line_items:  { type: Array },
+    tax_lines:  { type: Array },
+    shipping_lines:  { type: Array },
+    fee_lines:  { type: Array },
+    coupon_lines:  { type: Array },
+    refunds:  { type: Array },
+
+},{ collection: 'test_orders' });
+
+
+module.exports = mongoose.models.TestOrder || mongoose.model("TestOrder", TestOrderSchema);
