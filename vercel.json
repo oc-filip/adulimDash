@@ -1,12 +1,1 @@
-{
-  "crons": [
-  {
-    "path": "/api/crons/get_persons",
-    "schedule": "*/2 * * * *"
-  },
-   {
-    "path": "/api/orders/gettotals",
-    "schedule": "*/2 * * * *"
-    }
-  ]
-}
+
