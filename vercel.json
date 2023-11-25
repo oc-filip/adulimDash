@@ -1,1 +1,6 @@
-
+{
+  "crons": [{
+    "path": "/api/crons/get_persons",
+    "schedule": "*/2 * * * *"
+  }]
+}
