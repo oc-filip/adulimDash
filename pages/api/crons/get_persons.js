@@ -1,10 +1,11 @@
+import { NextRequest, NextResponse } from 'next/server'
 
 import Persons from '../../../models/person';
 import dbConnect from '../../../utils/dbConnect';
 
 dbConnect();
 
-export default async (req, res) => {
+export default async function handler (req:NextRequest, res:NextResponse) => {
 
     try {
 
