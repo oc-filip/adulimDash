@@ -1,6 +1,6 @@
+import dbConnect from '../../../utils/dbConnect';
 
 import Persons from '../../../models/person';
-import dbConnect from '../../../utils/dbConnect';
 
 dbConnect();
 
