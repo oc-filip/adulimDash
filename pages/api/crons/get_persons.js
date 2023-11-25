@@ -5,7 +5,7 @@ import dbConnect from '../../../utils/dbConnect';
 
 dbConnect();
 
-export default async function handler (req: NextRequest) => {
+export default async (req, res) => {
 
     try {
 
