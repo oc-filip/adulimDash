@@ -4,12 +4,12 @@ import dbConnect from '../../../utils/dbConnect';
 
 dbConnect();
 
-export async function GetPersons() {
+export async function handler(req, res) {
 
     try {
 
-    const res = await fetch(`https://api.pipedrive.com/v1/persons?api_token=5bafa4354cf7e47f6dbfcd414d36877fbe1fa68a&start=0&limit=500`);
-    const persons = await res.json();
+    const p = await fetch(`https://api.pipedrive.com/v1/persons?api_token=5bafa4354cf7e47f6dbfcd414d36877fbe1fa68a&start=0&limit=500`);
+    const persons = await p.json();
 
     
     const data = await Persons.create(persons);
