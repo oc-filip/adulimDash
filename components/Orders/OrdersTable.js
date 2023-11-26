@@ -16,6 +16,12 @@ const sortIcon = <ArrowDownward />;
 let totalbystatus;
 let totalbyrow;
 
+
+function toDate (date) {
+  const thedate = new Date(date);
+  return thedate.toLocaleDateString()
+}
+
 function statusName (rowstatus) { 
 
   if(rowstatus == "completed") {
@@ -46,43 +52,84 @@ export default function OrdersTable({totalOrders, totalByStatus}) {
   
 
   const columns = [
-
+    {
+      name: 'Id',
+      maxWidth: '80px',
+      minWidth: '20px',
+      cell: row => <p className="text-blueGray-500 font-bold uppercase"> {row.id}</p>,
+      selector:  row => row.id,
+      sortable: false,
+    },
+    /*
     {
       //name: 'Status',
       maxWidth: '20px',
       center:true,
       selector:  row => row.status,
-      sortable: true,
+      sortable: false,
       cell: row => <p className={row.status}><i class="fas fa-circle text-emerald-500 mr-2"></i></p>,
 
     },
+    */
     {
-      name: 'Id',
-      maxWidth: '80px',
-      minWidth: '20px',
-      cell: row => <p className="text-blueGray-500 uppercase"> {row.id}</p>,
-      selector:  row => row.id,
-      sortable: true,
+      name: 'status',
+      maxWidth: '120px',
+      center:true,
+      selector:  row => row.status,
+      sortable: false,
+      conditionalCellStyles: [
+        {
+            when: row => row.status === 'completed',
+            classNames: ['text-xs font-bold inline-block mt-4 mb-4 text-white bg-lightBlue-500 rounded'],
+        },
+        {
+          when: row => row.status === 'trash',
+          classNames: ['text-xs font-bold inline-block mt-4 mb-4 text-white bg-red-600 rounded'],
+        },
+        {
+          when: row => row.status === 'pending',
+          classNames: ['text-xs font-bold inline-block mt-4 mb-4 text-white bg-orange-500 rounded'],
+        },
+        {
+          when: row => row.status === 'processing',
+          classNames: ['text-xs font-bold inline-block mt-4 mb-4 text-white bg-green-500 rounded'],
+        },
+        {
+          when: row => row.status === 'draft',
+          classNames: ['text-xs font-bold inline-block mt-4 mb-4 text-white bg-red-600 rounded'],
+        },
+        {
+          when: row => row.status === 'cancelled',
+          classNames: ['text-xs font-bold inline-block mt-4 mb-4 text-white bg-CustomGray rounded'], 
+        },
+        {
+          when: row => row.status === 'bit-payment',
+          classNames: ['text-xs font-bold inline-block mt-4 mb-4 text-white bg-red-600 rounded'],
+        },
+
+        
+      ],
     },
+
     {
-      name: 'מספר הזמנה',
-      maxWidth: '200px',
+      name: 'Customer',
+      maxWidth: '260px',
       grow: 2,
       cell: row => 
       <div className="flex flex-col"><p className="text-blueGray-500 font-bold uppercase text-xs">{row.billing.first_name} {row.billing.last_name}</p> <span className="font-normal text-blueGray-500 lowercase"> {row.billing.email} </span></div>,
       selector: row => row.billing.first_name,
-      sortable: true,
+      sortable: false,
     },
     {
-      name: 'תאריך',
+      name: 'date',
       maxWidth: '150px',
       center:true,
       cell: row => 
-      <div className="flex flex-col"><p className="text-blueGray-500 text-xs">{row.date_created} </p></div>,
+      <div className="flex flex-col"><p className="text-blueGray-500 font-bold"> {toDate(row.date_created)} </p></div>,
       selector: row => row.date_created,
-      sortable: true,
+      sortable: false,
     },
-
+/*
     {
       name: 'סוג משלוח',
       maxWidth: '260px',
@@ -95,58 +142,26 @@ export default function OrdersTable({totalOrders, totalByStatus}) {
       )})}
    </div>,
       //selector: row => row.date_created,
-      sortable: true,
+      sortable: false,
     },
     
+*/
 
 
 
     {
-      name: 'סטטוס',
-      maxWidth: '120px',
-      center:true,
-      selector:  row => statusName(row.status),
-      sortable: true,
-      conditionalCellStyles: [
-        {
-            when: row => row.status === 'completed',
-            classNames: ['text-xs font-bold inline-block mt-2 mb-2 text-lightBlue-600'],
-        },
-        {
-          when: row => row.status === 'trash',
-          classNames: ['text-xs font-bold inline-block mt-2 mb-2 text-red-600'],
-        },
-        {
-          when: row => row.status === 'pending',
-          classNames: ['text-xs font-bold inline-block mt-2 mb-2 text-orange-500'],
-        },
-        {
-          when: row => row.status === 'processing',
-          classNames: ['text-xs font-bold inline-block mt-2 mb-2 text-emerald-600'],
-        },
-        {
-          when: row => row.status === 'draft',
-          classNames: ['text-xs font-bold inline-block mt-2 mb-2 text-blueGray-700'],
-        },
-        {
-          when: row => row.status === 'cancelled',
-          classNames: ['text-xs font-bold inline-block mt-2 mb-2 text-gray-500'],
-        },
-      ],
-    },
-    {
-      name: 'סה”כ',
+      name: 'Total',
       maxWidth: '120px',
       selector: row => row.total,
-      sortable: true,
+      sortable: false,
       center:true,
-      cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{row.total} </p></div>,
+      cell: row => <div className="flex flex-col"><p className="font-bold text-emerald-500">₪{row.total} </p></div>,
     },
     {
       right: true,
       //maxWidth: '200px',
       cell: row => <Link href={`/admin/orders/${row.id}`}>
-        <a className="bg-CustomGray text-white uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"><i class="fas fa-eye ml-2"></i> הצגת הזמנה </a>
+        <a className="bg-blueGray-600 font-bold text-white uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150">View Order</a>
         </Link>,
         
     },
@@ -412,65 +427,37 @@ export default function OrdersTable({totalOrders, totalByStatus}) {
         <div className="w-full px-4">
           <nav className="relative flex flex-wrap items-center justify-between navbar-expand-lg rounded">
             <div className="container mx-auto flex flex-wrap items-center justify-between">
-              <div className="w-full relative flex justify-between lg:w-auto px-4 lg:static lg:block lg:justify-start">
+              <div className="w-full relative flex mb-4">
               <h3
                 className={
-                  "font-semibold text-lg blueGray"
+                  "font-semibold text-lg"
                 }
               >
-                הזמנות
+                WC Orders
               </h3>
-                <button
-                  className="text-black opacity-50 cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
-                  type="button"
-                  onClick={() => setMenuOpen(!menuOpen)}
-                >
-                  <i className="fas fa-bars"></i>
-                </button>
               </div>
-              <div
-                className={
-                  "lg:flex flex-grow items-center" +
-                  (menuOpen ? " flex" : " hidden")
-                }
-                id="example-navbar-info"
-              >
+
+              <div className= "lg:flex flex-grow items-center">
+
+               
                 {!pending &&
                 <ul className="flex flex-col lg:flex-row list-none lg:mr-auto">
 
+                  <li className="nav-item bg-green-500 text-white font-bold uppercase text-xs px-4 py-2 outline-none focus:outline-none ease-linear transition-all duration-150">Filter by Status</li>
+
                   <li className="nav-item" onClick={() => setActive('any')}>
                       <button onClick={() => getOrders(1,'any',text)} 
-                      type="button" className={active === 'any' ? 'rtltext-blueGray-600 font-bold uppercase text-xs px-4 py-2 outline-none focus:outline-none ease-linear transition-all duration-150' : 
-                      'rtl text-blueGray-400 bg-transparent font-bold uppercase text-xs px-4 py-2 outline-none focus:outline-none ease-linear transition-all duration-150'} >({totalOrders}) הכל</button>
+                      type="button" className={active === 'any' ? 'text-blueGray-600 font-bold uppercase text-xs px-4 py-2 outline-none focus:outline-none ease-linear transition-all duration-150' : 
+                      'text-blueGray-400 bg-transparent font-bold uppercase text-xs px-4 py-2 outline-none focus:outline-none ease-linear transition-all duration-150'} >All ({totalOrders}) </button>
                   </li>
 
 
                   {totalByStatus.map(totalby => {
-                     if(totalby._id == "completed") {
-                      totalbystatus = "הושלם"
-                    } else if (totalby._id == "processing") {
-                      totalbystatus = "בתהליך"
-                    } else if (totalby._id == "cancelled") {
-                      totalbystatus = "בוטל"
-                    } else if (totalby._id == "pending") {
-                      totalbystatus = "מושהה"
-                    } else if (totalby._id == "draft") {
-                      totalbystatus = "טיוטה"
-                    } else if (totalby._id == "failed") {
-                      totalbystatus = "בכשל"
-                    }  else if (totalby._id  == "refunded") {
-                      totalbystatus = "החזר כספי "
-                    }  else if (totalby._id == "bit-payment") {
-                      totalbystatus = "Pending Bit"
-                    } else if (totalby._id == "trash") {
-                      totalbystatus = "פח"
-                    }
-                    
                   return (
                     <li key={totalby._id} className="nav-item" onClick={() => setActive(totalby._id)}>
                       <button onClick={() => getOrders(1,totalby._id, text)} 
-                      type="button" className={active === totalby._id ? 'rtl text-blueGray-600 font-bold uppercase text-xs px-4 py-2 outline-none focus:outline-none ease-linear transition-all duration-150' : 
-                      'rtl text-blueGray-400 bg-transparent font-bold uppercase text-xs px-4 py-2 outline-none focus:outline-none ease-linear transition-all duration-150'} >({totalby.total}) {totalbystatus} </button>
+                      type="button" className={active === totalby._id ? 'text-blueGray-600 font-bold uppercase text-xs px-4 py-2 outline-none focus:outline-none ease-linear transition-all duration-150' : 
+                      'text-blueGray-400 bg-transparent font-bold uppercase text-xs px-4 py-2 outline-none focus:outline-none ease-linear transition-all duration-150'} > {totalby._id} ({totalby.total})</button>
                   </li>
 
                     )
@@ -491,7 +478,7 @@ export default function OrdersTable({totalOrders, totalByStatus}) {
 
           {!pending && <div className="relative flex w-full  mb-3 items-center flex justify-between">
               
-              <input onChange={(e) => filterOrders(e.target.value)} type="text" placeholder="חיפוש הזמנה" className="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline lg:w-4/12 pl-10"/>
+              <input onChange={(e) => filterOrders(e.target.value)} type="text" placeholder="Search Orders" className="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline lg:w-4/12 pl-10"/>
             
               {active == "trash" && <button onClick={deleteOrdersMany} className="bg-red-600 active:bg-red-500 text-white font-bold uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none 
                 focus:outline-none mr-1 ease-linear transition-all duration-150">Empty Trash</button>
