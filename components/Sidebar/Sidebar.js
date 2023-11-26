@@ -14,7 +14,7 @@ export default function Sidebar() {
   const router = useRouter();
   return (
     <>
-      <nav className="md:right-0 rtl md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6">
+      <nav className="md:left-0 md:block md:fixed md:top-0 md:bottom-0 md:overflow-y-auto md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6">
         <div className="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
           {/* Toggler */}
           <button
@@ -76,65 +76,138 @@ export default function Sidebar() {
                   <a
                     href="#"
                     className={
-                      "text-xs uppercase py-1 text-lg font-bold block " +
+                      "text-xs uppercase py-1 font-bold block " +
                       (router.pathname.indexOf("/admin/dashboard") !== -1
                         ? "text-blueGray-700 underline hover:text-lightBlue-600"
                         : "text-blueGray-500 hover:text-blueGray-500")
                     }
                   >
                     {" "}
-                    בית
+                    Dashboard
                   </a>
                 </Link>
               </li>
 
+              <hr className="my-2 md:min-w-full" />        
               <li className="items-center text-center">
                 <Link href="/admin/orders">
                   <a
                     href="#"
                     className={
-                      "text-xs uppercase py-1 text-lg font-bold block " +
+                      "text-xs uppercase py-1 font-bold block " +
                       (router.pathname.indexOf("/admin/orders") !== -1
                         ? "text-blueGray-700 underline hover:text-lightBlue-600"
                         : "text-blueGray-500 hover:text-blueGray-500")
                     }
                   >
                     {" "}
-                    הזמנות
+                    WC Orders
                   </a>
                 </Link>
               </li>
 
+              <hr className="my-2 md:min-w-full" />        
+              <li className="items-center text-center">
+                <Link href="/admin/rihvit_orders">
+                  <a
+                    href="#"
+                    className={
+                      "text-xs uppercase py-1 font-bold block " +
+                      (router.pathname.indexOf("/admin/rihvit_orders") !== -1
+                        ? "text-blueGray-700 underline hover:text-lightBlue-600"
+                        : "text-blueGray-500 hover:text-blueGray-500")
+                    }
+                  >
+                    {" "}
+                    Rihvit Orders
+                  </a>
+                </Link>
+              </li>
+
+              <hr className="my-2 md:min-w-full" />        
+              <li className="items-center text-center">
+                <Link href="/admin/ordersgrouped">
+                  <a
+                    href="#"
+                    className={
+                      "text-xs uppercase py-1 font-bold block " +
+                      (router.pathname.indexOf("/admin/ordersgrouped") !== -1
+                        ? "text-blueGray-700 underline hover:text-lightBlue-600"
+                        : "text-blueGray-500 hover:text-blueGray-500")
+                    }
+                  >
+                    {" "}
+                    Client/Orders
+                  </a>
+                </Link>
+              </li>              
+
+              <hr className="my-2 md:min-w-full" />      
+              <li className="items-center text-center">
+                <Link href="/admin/customers">
+                  <a
+                    href="#"
+                    className={
+                      "text-xs uppercase py-1 font-bold block " +
+                      (router.pathname.indexOf("/admin/customers") !== -1
+                        ? "text-blueGray-700 underline hover:text-lightBlue-600"
+                        : "text-blueGray-500 hover:text-blueGray-500")
+                    }
+                  >
+                    {" "}
+                    Customers
+                  </a>
+                </Link>
+              </li>
+              <hr className="my-2 md:min-w-full" />      
+              <li className="items-center text-center">
+                <Link href="/admin/persons">
+                  <a
+                    href="#"
+                    className={
+                      "text-xs uppercase py-1 font-bold block " +
+                      (router.pathname.indexOf("/admin/persons") !== -1
+                        ? "text-blueGray-700 underline hover:text-lightBlue-600"
+                        : "text-blueGray-500 hover:text-blueGray-500")
+                    }
+                  >
+                    {" "}
+                    Persons (Pipedrive)
+                  </a>
+                </Link>
+              </li>
+              <hr className="my-2 md:min-w-full" />     
               <li className="items-center text-center">
                 <Link href="/admin/products">
                   <a
                     href="#"
                     className={
-                      "text-xs uppercase py-1 text-lg font-bold block " +
+                      "text-xs uppercase py-1 font-bold block " +
                       (router.pathname.indexOf("/admin/products") !== -1
                         ? "text-blueGray-700 underline hover:text-lightBlue-600"
                         : "text-blueGray-500 hover:text-blueGray-500")
                     }
                   >
                     {" "}
-                    מוצרים
+                    Products
                   </a>
                 </Link>
               </li>
 
+              <hr className="my-2 md:min-w-full" />
               <li className="items-center text-center">
                 <Link href="/admin/product_categories">
                   <a
                     href="#"
                     className={
-                      "text-xs uppercase py-1 text-lg font-bold block " +
+                      "text-xs uppercase py-1 font-bold block " +
                       (router.pathname.indexOf("/admin/product_categories") !== -1
                         ? "text-blueGray-700 underline hover:text-lightBlue-600"
                         : "text-blueGray-500 hover:text-blueGray-500")
                     }
                   >
                     {" "}
-                    קטגוריות מוצרים
+                      Product Categories                  
                   </a>
                 </Link>
               </li>
@@ -154,7 +227,7 @@ export default function Sidebar() {
                     uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                   >
                    
-                   התנתק
+                   Logout
                   </button>
                 
               </li>
