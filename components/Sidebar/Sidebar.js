@@ -159,6 +159,7 @@ export default function Sidebar() {
                   </a>
                 </Link>
               </li>
+                      
               <hr className="my-2 md:min-w-full" />      
               <li className="items-center text-center">
                 <Link href="/admin/persons">
