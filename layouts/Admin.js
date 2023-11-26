@@ -27,7 +27,7 @@ export default function Admin({ children }) {
   Router.events.on("routeChangeStart", () => {
     setisLoading(true);
   });
-  
+
   
   Router.events.on("routeChangeComplete", () => {
     setisLoading(false);
