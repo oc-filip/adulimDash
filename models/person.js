@@ -6,5 +6,4 @@ const PersonSchema = new mongoose.Schema({
 },{ collection: 'new_persons' ,strict: false});
 
 
-
 module.exports = mongoose.models.Person || mongoose.model("Person", PersonSchema);
