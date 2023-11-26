@@ -49,36 +49,47 @@ export default function CustomersTable({totalCustomers}) {
   
 const columns = [
   {
-    name: 'Id',
-    cell: row => <Link href={`customers/${row.id}`}>
-      <a className="text-blueGray-700 font-bold uppercase"> {row.id}</a>
+    name: 'Customer ID',
+    cell: row => <Link href={`customers/${row.customer_id}`}>
+      <a className="text-blueGray-700 font-bold uppercase"> {row.customer_id}</a>
       </Link>,
     selector:  row => row.id,
-    sortable: true,
+    sortable: false,
   },
   {
     name: 'First Name',
     selector:  row => row.first_name,
-    sortable: true,
+    sortable: false,
+    cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{row.first_name} </p></div>,
   },
   {
     name: 'Last Name',
     selector: row => row.last_name,
-    sortable: true,
+    sortable: false,
+    cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{row.last_name} </p></div>,
   },
   {
     name: 'Email',
+    minWidth: '240px',
     selector: row => row.email,
-    sortable: true,
+    sortable: false,
+    cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{row.email} </p></div>,
   },
   {
-    name: 'Role',
-    selector: row => row.role,
-    sortable: true,
+    name: 'Phone',
+    selector: row => row.phone,
+    sortable: false,
+    cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{row.phone} </p></div>,
+  },
+  {
+    name: 'Phone 2',
+    selector: row => row.phone2,
+    sortable: false,
+    cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{row.phone2} </p></div>,
   },
   {
     right: true,
-    maxWidth: '100px',
+    maxWidth: '120px',
     cell: row =>
       <button onClick={() => editForm(row)} className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150">Edit</button>
       
@@ -88,7 +99,7 @@ const columns = [
     maxWidth: '120px',
     cell: row => <button className="bg-red-600 active:bg-red-500 text-white font-bold 
     uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" 
-    onClick={() => deleteUser(row.id)}>Delete
+    onClick={() => deleteUser(row.customer_id)}>Delete
       </button>
   },
 ];
@@ -167,13 +178,12 @@ const columns = [
   };
     
 
-  async function getCustomers(page = 1, role = 'any', text= '') {
+  async function getCustomers(page = 1,  text= '') {
 
-    if (role === 'any') {
+
       const res = await fetch(`${process.env.API_URL}/customers?page=${page}&per_page=${countPerPage}&text=${text}`);
       const allcustomers = await res.json();
 
-      setTotalRole(allcustomers.totalByRole);
       setCustomers(allcustomers.data);
       setPending(false);
       getTotal(role);
@@ -184,25 +194,13 @@ const columns = [
       }
 
 
-    } else {
 
-      const res = await fetch(`${process.env.API_URL}/customers?page=${page}&per_page=${countPerPage}&role=${role}&text=${text}`);
-      const allcustomers = await res.json();
-      setCustomers(allcustomers.data);
-      setPending(false);
-      getTotal(role);
-      setRole(role);
-      if (page === 1) {
-        setResetPaginationToggle(!resetPaginationToggle);
-      }
-
-    }
 
   }
 
   useEffect(() => {
     console.log('UseEffect Running');
-    getCustomers(page ,role , text); 
+    getCustomers(page , text); 
     
   }, [page, text]);
 
@@ -217,7 +215,7 @@ const columns = [
       });
     
       const data = await res.json();
-      getCustomers(1,"any","");
+      getCustomers(1,"");
       setAlertType('info');
       setAlertContent(data.msg);
       setOpen(true);
@@ -235,7 +233,7 @@ const columns = [
     });
   
     const data = await res.json();
-    getCustomers(1,"any","");
+    getCustomers(1,"");
     setAlertType('info');
     setAlertContent(data.msg);
     setOpen(true);
@@ -314,7 +312,7 @@ const columns = [
     });
   
     const data = await res.json();
-    getCustomers(1,"any","");
+    getCustomers(1,"");
     setAlertType('success');
     setAlertContent(data.msg);
     setModal(false);
@@ -341,13 +339,11 @@ console.log('Values',values);
         id: values.id,
         first_name: values.first_name,
         last_name: values.last_name,   
+        street: values.street,
+        city: values.city, 
         email: values.email,  
-        role: values.role,
-        address_1: values.billing.address_1,
-        address_2: values.billing.address_2,
-        city: values.billing.city, 
-        postcode: values.billing.postcode,
-        phone: values.billing.phone,
+        phone: values.phone,
+        phone2: values.phone2,
       });
   setEditModal(true);
 }
@@ -359,12 +355,10 @@ const EditUser = async event => {
   const first_name = event.target.first_name.value;
   const last_name = event.target.last_name.value;
   const email = event.target.email.value;
-   const role = event.target.role.value;
-   const address_1 = event.target.address_1.value;
-   const address_2 = event.target.address_2.value;
+   const street = event.target.street.value;
    const city = event.target.city.value;
-   const postcode = event.target.postcode.value;
    const phone = event.target.phone.value;
+   const phone2 = event.target.phone2.value;
 
  if(first_name == "") {
   setAlertType('error');
@@ -403,7 +397,7 @@ const EditUser = async event => {
 
   const data = await res.json();
   console.log(data);
-  getCustomers(1,"any","");
+  getCustomers(1,"");
   setAlertType('success');
   setAlertContent('User Updated');
   setEditModal(false);
@@ -445,14 +439,14 @@ const EditUser = async event => {
     <div  className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
       
       
-      <div className="flex flex-wrap py-2 bg-blueGray-700">
+      <div className="flex flex-wrap py-2">
         <div className="w-full px-4">
           <nav className="relative flex flex-wrap items-center justify-between navbar-expand-lg bg-blueGray-500 rounded">
             <div className="container mx-auto flex flex-wrap items-center justify-between">
               <div className="w-full relative flex justify-between lg:w-auto px-4 lg:static lg:block lg:justify-start">
               <h3
                 className={
-                  "font-semibold text-lg text-white"
+                  "font-semibold text-lg"
                 }
               >
                 Customers
@@ -473,30 +467,6 @@ const EditUser = async event => {
                 id="example-navbar-info"
               >
 
-
-                {!pending &&
-                <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
-
-                  <li className="nav-item" onClick={() => setActive('any')}>
-                      <button onClick={() => getCustomers(1,'any',text)} 
-                      type="button" className={active === 'any' ? 'font-bold uppercase text-xs px-4 py-2  rounded outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 text-white bg-transparent border-2 border-solid border-blueGray-700 bg-blueGray-700' : 
-                      'text-blueGray-500 bg-transparent border-2 border-solid border-blueGray-700 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 ease-linear transition-all duration-150'} >All ({totalCustomers})</button>
-                  </li>
-
-
-                  {totalRole.map(totalby => {
-                  return (
-                    <li key={totalby._id} className="nav-item" onClick={() => setActive(totalby._id)}>
-                      <button onClick={() => getCustomers(1,totalby._id,text)} 
-                      type="button" className={active === totalby._id ? 'font-bold uppercase text-xs px-4 py-2  rounded outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 text-white bg-transparent border-2 border-solid border-blueGray-700 bg-blueGray-700' : 
-                      'text-blueGray-500 bg-transparent border-2 border-solid border-blueGray-700 font-bold uppercase text-xs px-4 py-2 rounded outline-none focus:outline-none mr-1 ease-linear transition-all duration-150'} >{totalby._id} ({totalby.total})</button>
-                  </li>
-
-                    )
-                  })} 
-                </ul>
-                }
-                
               </div>
             </div>
           </nav>
@@ -509,11 +479,11 @@ const EditUser = async event => {
 
             {!pending && <div className="relative flex w-full  mb-3 items-center flex justify-between">
                     <span className="z-10 h-full leading-snug font-normal absolute text-center text-blueGray-300 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3">
-                      <i className="fas fa-search"></i>
+                     
                     </span>
-                    <input onChange={(e) => filterUsers(e.target.value)} type="text" placeholder="Search Users" className="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline lg:w-4/12 pl-10"/>
+                    <input onChange={(e) => filterUsers(e.target.value)} type="text" placeholder="Search Customers" className="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline lg:w-4/12 pl-10"/>
                     <button className="bg-green-500 active:bg-green-500 text-white font-bold 
-      uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" onClick={() => setModal(!modal)}>Add New User</button>  
+      uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" onClick={() => setModal(!modal)}>New Customer</button>  
 
                   </div>}
 
@@ -666,29 +636,10 @@ const EditUser = async event => {
                 type="text" name="email" placeholder="Email" onChange={handleInputChange} value={formvalues.email}/>
               </div>
              
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <select name="role" className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                labelid="role-select-label" id="status-select" label="Role" value={formvalues.role}>
-                    <option value="">Select Role</option>
-                    <option value="administrator">Administrator</option>
-                    <option value="sap_api">Sap Api</option>
-                    <option value="customer">Customer</option>
-                    <option value="subscriber">Subscriber</option>
-                    <option value="shop_manager">Shop Manager</option>
-                    <option value="author">Author</option>
-                    <option value="editor">Editor</option>
-                </select> 
-              </div>
-
-
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="text" name="address_1" placeholder="Address 1" onChange={handleInputChange} value={formvalues.address_1}/>
-              </div>
              
               <div className="w-full px-4 lg:w-4/12 mb-6"> 
                 <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="text" name="address_2" placeholder="Address 2" onChange={handleInputChange} value={formvalues.address_2}/>
+                type="text" name="address_2" placeholder="Street" onChange={handleInputChange} value={formvalues.street}/>
               </div>
 
               <div className="w-full px-4 lg:w-4/12 mb-6"> 
@@ -698,12 +649,12 @@ const EditUser = async event => {
 
               <div className="w-full px-4 lg:w-4/12 mb-6"> 
                 <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="number" name="postcode" placeholder="Post Code" onChange={handleInputChange} value={formvalues.postcode}/>
+                type="number" name="postcode" placeholder="Phone" onChange={handleInputChange} value={formvalues.phone}/>
               </div>
 
               <div className="w-full px-4 lg:w-4/12 mb-6"> 
                 <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="number" name="phone" placeholder="Phone" onChange={handleInputChange} value={formvalues.phone}/>
+                type="number" name="phone" placeholder="Phone2" onChange={handleInputChange} value={formvalues.phone2}/>
               </div>
 
               <input type="hidden" name="id" value={formvalues.id}  />
