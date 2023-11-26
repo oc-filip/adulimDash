@@ -25,16 +25,20 @@ export default async (req, res) => {
                 const per_page =  req.query.per_page * 1;
                 const skip = (page - 1) * per_page;
 
-                 let query = Customer.find( {...req.query,"$or": [
+                 let query = Customer.find( {customer_id: { $ne: 0 },"$or": [
                         { "first_name": { $regex: search, $options: "i" } },
-                        { "last_name": { $regex: search, $options: "i" } }
+                        { "last_name": { $regex: search, $options: "i" } },
+                        { "email": { $regex: search, $options: "i" } },
+                        { "phone": { $regex: search, $options: "i" } }
                     
                     ]});
-                query = query.select('id first_name last_name username email role billing.address_1 billing.address_2 billing.city billing.phone billing.postcode');
-                query = query.skip(skip).limit(per_page);
+                query = query.select('customer_id first_name last_name email street city phone phone2 balance');
+                query = query.skip(skip).limit(per_page).sort({"customer_id": -1 });
 
-                const customers = await query;
+                const data = await query;
 
+                console.log('customers',data)
+/*
                 const totals = await Customer.aggregate(
                     
                     [
@@ -54,9 +58,9 @@ export default async (req, res) => {
 
                     ],
                 );
+*/
 
-
-                res.status(200).json({ success: true, data: customers, totalByRole: totals})
+                res.status(200).json({ success: true, data: data})
             } catch (error) {
                 res.status(400).json({ success: false });
             }
