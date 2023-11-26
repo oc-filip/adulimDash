@@ -43,7 +43,7 @@ export default function Admin({ children }) {
       {isLoading && <PageLoader /> ? <PageLoader /> :  
       <>
       <Sidebar />
-      <div className="relative md:mr-64 rtl bg-blueGray-100">
+      <div className="relative md:ml-64  bg-blueGray-300">
         <div className="px-4 md:px-4 mx-auto w-full relative">
       
           
