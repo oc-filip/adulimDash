@@ -36,7 +36,7 @@ module.exports = (phase, { defaultConfig }) => {
         API_URL: "https://adulim-dash.vercel.app/api",
         MONGO_URI: "mongodb+srv://adulim:uMsoU1KgvAz9QwYf@cluster0.568vwt7.mongodb.net/AdulimDB?retryWrites=true&w=majority",
         JWT_SECRET: "ou5389nvx@'1=!lsdgkwrg",
-        WC_URL: "https://adulim.co.il",
+        WC_URL: "https://www.adulim.co.il",
         WC_KEY: "ck_000269b103ee13e277528e5ee6ecc2525a4dbe5c",
         WC_SECRET: "cs_3cdfd0553ae2c8e3fe2b2ee46dbef946bc2fb86a",
     },
