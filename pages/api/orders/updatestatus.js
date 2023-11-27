@@ -3,7 +3,7 @@ import Order from '../../../models/order';
 
 dbConnect();
 
-const WooCommerceRestApi = require("@woocommerce/woocommerce-rest-api").default;
+import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api"; 
 
 const WooCommerce = new WooCommerceRestApi({
     url: process.env.WC_URL,
