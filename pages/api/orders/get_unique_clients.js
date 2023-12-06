@@ -11,6 +11,10 @@ export default async (req, res) => {
         case 'GET':
             try {
 
+                 let today = new Date();
+
+                console.log('today', today)
+
                 let query = AllOrders.find({is_cancelled:false,document_type:{$in:[1,2]}});
                 query = query.skip(0).limit(500).sort({"document_number": -1 });
                 const orders = await query;
