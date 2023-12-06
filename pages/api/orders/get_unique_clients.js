@@ -12,7 +12,7 @@ export default async (req, res) => {
             try {
 
                 let query = AllOrders.find({is_cancelled:false,document_type:{$in:[1,2]}});
-
+                query = query.skip(0).limit(500).sort({"document_number": -1 });
                 const orders = await query;
 
 
