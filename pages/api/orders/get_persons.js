@@ -1,6 +1,6 @@
 import dbConnect from '../../../utils/dbConnect';
 
-import Persons from '../../../models/person';
+import OrdersGrouped from '../../../models/ordersgrouped';
 
 dbConnect();
 
@@ -8,15 +8,25 @@ export default async (req, res) => {
 
     try {
 
-    const p = await fetch(`https://api.pipedrive.com/v1/persons?api_token=5bafa4354cf7e47f6dbfcd414d36877fbe1fa68a&start=0&limit=5`);
-    const persons = await p.json();
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-    //console.log('persons', persons)
-    const data = await Persons.insertMany(persons.data);
 
-    
+        console.log('today', today)
 
-    res.status(201).json({ success: true, status:"saved" })
+        
+        const data = await OrdersGrouped.find(
+            {
+            "LastOrder.customer_name": { $not: /.*כרטיס כפול.*/i },
+            "reccuring": { $in: [null, "58"] },
+            "LastOrder.document_type": { $in: [1, 2] },
+            'NextOrderDate': today
+            }
+        );
+
+        console.log('data',data)
+
+        res.status(201).json({ success: true, data: data })
 
 
 
