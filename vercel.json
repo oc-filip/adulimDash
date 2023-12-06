@@ -2,7 +2,7 @@
 {
     "crons": [
     {
-      "path": "/api/orders/get_persons",
+      "path": "/api/orders/get_unique_clients",
       "schedule": "*/2 * * * *"
     }
     ]
