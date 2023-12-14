@@ -326,7 +326,7 @@ const columns = [
   
     const data = await res.json();
     //getCustomers(1,"");
-    setPersons(data.data);
+    //setPersons(data.data);
     setCsv(data.data);
     setAlertType('success');
     setAlertContent(data.msg);
