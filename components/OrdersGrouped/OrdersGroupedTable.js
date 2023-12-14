@@ -11,16 +11,39 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import fetch from 'isomorphic-unfetch';
+import { CSVLink } from "react-csv";
 
 const sortIcon = <ArrowDownward />;
+
+
+const headers = [
+  { label: "UserID", key: "UserID" },
+  { label: "CustomerName", key:"LastOrder.customer_name"},
+  { label: "NumOfOrders", key: "NumOfOrders" },
+  { label: "LastOrderDate", key: "LastOrderDate" },
+  { label: "NextOrderDate", key: "NextOrderDate" },
+  { label: "AverageFrequency", key: "AverageFrequency" },
+  { label: "PipedriveID", key: "pipedrive_id" },
+  { label: "Reccuring", key: "reccuring" }
+];
+
 
 
 function toDate (date) {
   const thedate = new Date(date);
   return thedate.toLocaleDateString()
 }
+//////////////////////////////////////////////////
 
 
+
+const Export = ({ onExport }) => <button onClick={e => onExport(e.target.value)}>Export</button>;
+
+
+
+
+
+////////////////////////////////
 const contextActions = (deleteHandler) => (
   <button onClick={deleteHandler} className="bg-red-600 active:bg-red-500 text-white font-bold 
 uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150">Delete Selected Rows</button>
@@ -40,12 +63,16 @@ export default function OrdersGroupedTable({totalOrders}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState('any');
   const [persons, setPersons] = useState([]);
+  const [csv, setCsv] = useState([]);
+  const [csvfilename,setCsvFileName] = useState('');
   const [page, setPage] = useState(1);
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false);
   const [total, setTotal] = useState();
   const [totalRole, setTotalRole] = useState([]);
   const [role, setRole] = useState('any');
   const [pending, setPending] = useState(true);
+  const [pendingcsv, setPendingCsv] = useState(true);
+
   const [text, setText] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
   const [toggleCleared, setToggleCleared] = useState(false);
@@ -60,43 +87,43 @@ const columns = [
       <a className="text-blueGray-700 font-bold uppercase"> {row.UserID}</a>
       </Link>,
     selector:  row => row.UserID,
-    sortable: false,
+    sortable: true,
   },
   {
     name: 'Last Order Date',
     selector:  row => row.LastOrderDate,
-    sortable: false,
+    sortable: true,
     cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{toDate(row.LastOrderDate)} </p></div>,
   },
   {
     name: 'Next Order Date',
     selector:  row => row.NextOrderDate,
-    sortable: false,
+    sortable: true,
     cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{toDate(row.NextOrderDate)} </p></div>,
   },
   {
     name: 'Total Orders',
     selector:  row => row.NumOfOrders,
-    sortable: false,
+    sortable: true,
     cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{row.NumOfOrders} </p></div>,
   },
 
   {
     name: 'Avg Days',
     selector: row => row.AverageFrequency,
-    sortable: false,
+    sortable: true,
     cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{row.AverageFrequency} </p></div>,
   },
   {
     name: 'Last5 Avg',
     selector: row => row.Last5Avg,
-    sortable: false,
+    sortable: true,
     cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{row.Last5Avg} </p></div>,
   },
   {
     name: 'Pipedrive ID',
     selector: row => row.pipedrive_id,
-    sortable: false,
+    sortable: true,
     cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{row.pipedrive_id} </p></div>,
   },
   /*
@@ -141,10 +168,16 @@ const columns = [
     });
   };
 
+//////////////////////////////////////////////////
 
+
+
+
+/////////////////////////////////////////////////////
 
   const handleModalClose = () => {
     setModal(false);
+    setPendingCsv(true);
   };
 
 
@@ -253,82 +286,52 @@ const columns = [
   }
 
 
-  const AddUser = async event => {
+  const GetCsv = async event => {
     event.preventDefault()
 
-   const first_name = event.target.first_name.value;
-   const last_name = event.target.last_name.value;
-   const email = event.target.email.value;
-   const role = event.target.role.value;
-   const username = event.target.username.value;
-   const password = event.target.password.value;
-   const address_1 = event.target.address_1.value;
-   const address_2 = event.target.address_2.value;
-   const city = event.target.city.value;
-   const postcode = event.target.postcode.value;
-   const phone = event.target.phone.value;
+   const to = event.target.to.value;
+   const from = event.target.from.value;
+
+   const csvfilename = 'Orders-' + from +'-'+ to
+   setCsvFileName(csvfilename);
 
 
-   if(first_name == "") {
+   if(from == "") {
     setAlertType('error');
-    setAlertContent('Add User First Name');
+    setAlertContent('Select From Date');
     setOpen(true);
       return
    }
 
-   if(last_name == "") {
+   if(to == "") {
     setAlertType('error');
-    setAlertContent('Add User Last Name');
+    setAlertContent('Select To Date');
     setOpen(true);
       return
    }
 
-   if(email == "") {
-    setAlertType('error');
-    setAlertContent('Add User Email');
-    setOpen(true);
-      return
-   }
 
-   if(username == "") {
-    setAlertType('error');
-    setAlertContent('Add User Username');
-    setOpen(true);
-      return
-   }
 
-   if(password == "") {
-    setAlertType('error');
-    setAlertContent('Add User Password');
-    setOpen(true);
-      return
-   }
-    const res = await fetch(`${process.env.API_URL}/ordersgrouped`, {
+    const res = await fetch(`${process.env.API_URL}/ordersgrouped/get_csv`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        first_name: first_name,
-        last_name: last_name,
-        email: email,
-        username: username,
-        password: password,
-        role: role,      
-        address_1: address_1,
-        address_2: address_2,
-        city: city,
-        postcode: postcode,
-        phone: phone,
+        from: from,
+        to: to,
 
       }), 
     });
   
     const data = await res.json();
-    getCustomers(1,"");
+    //getCustomers(1,"");
+    setPersons(data.data);
+    setCsv(data.data);
     setAlertType('success');
     setAlertContent(data.msg);
-    setModal(false);
+    //setModal(false);
+    setPendingCsv(false)
     setOpen(true);
   }
 
@@ -344,79 +347,6 @@ const handleInputChange = e => {
 
 }
 
-
-const editForm = async values => {
-
-console.log('Values',values);
-  setFormValues ({
-        id: values.id,
-        first_name: values.first_name,
-        last_name: values.last_name,   
-        street: values.street,
-        city: values.city, 
-        email: values.email,  
-        phone: values.phone,
-        phone2: values.phone2,
-      });
-  setEditModal(true);
-}
-
-const EditUser = async event => {
-  event.preventDefault()
-
-  const id = event.target.id.value;
-  const first_name = event.target.first_name.value;
-  const last_name = event.target.last_name.value;
-  const email = event.target.email.value;
-   const street = event.target.street.value;
-   const city = event.target.city.value;
-   const phone = event.target.phone.value;
-   const phone2 = event.target.phone2.value;
-
- if(first_name == "") {
-  setAlertType('error');
-  setAlertContent('Add User First Name');
-  setOpen(true);
-
-    return
- }
-
- 
- if(last_name == "") {
-  setAlertType('error');
-  setAlertContent('Add User Last Name');
-  setOpen(true);
-
-    return
- }
-
-  const res = await fetch(`${process.env.API_URL}/ordersgrouped/${id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      first_name: first_name,
-      last_name:  last_name,  
-      email: email,
-      role: role,      
-      address_1: address_1,
-      address_2: address_2,
-      city: city,
-      postcode: postcode,
-      phone: phone,  
-    }), 
-  });
-
-  const data = await res.json();
-  console.log(data);
-  getCustomers(1,"");
-  setAlertType('success');
-  setAlertContent('User Updated');
-  setEditModal(false);
-
-  setOpen(true);
-}
 
 //////////////////////////////////////////////////////
 
@@ -455,7 +385,7 @@ const EditUser = async event => {
       <div className="flex flex-wrap py-2">
         <div className="w-full px-4">
           <nav className="relative flex flex-wrap items-center justify-between navbar-expand-lg bg-blueGray-500 rounded">
-            <div className="container mx-auto flex flex-wrap items-center justify-between">
+            <div className="container  flex flex-wrap items-center justify-between">
               <div className="w-full relative flex justify-between lg:w-auto px-4 lg:static lg:block lg:justify-start">
               <h3
                 className={
@@ -495,7 +425,8 @@ const EditUser = async event => {
                      
                     </span>
                     <input onChange={(e) => filterUsers(e.target.value)} type="text" placeholder="Search Orders" className="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline lg:w-4/12 pl-10"/>
-                   
+                    <button className="bg-green-500 active:bg-green-500 text-white font-bold 
+ uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" onClick={() => setModal(!modal)}>Download CSV</button>  
                   </div>}
 
 
@@ -538,80 +469,34 @@ const EditUser = async event => {
         {/* New User Modal  */}     
 
         <Dialog open={modal} className="px-4 py-4">
-        <DialogTitle className="text-center mb-6">Create New User</DialogTitle>
+        <DialogTitle className="text-center mb-6">Filter By Date</DialogTitle>
         <DialogContent>
-          <form onSubmit={AddUser}>
+          <form onSubmit={GetCsv}>
             <div className="flex flex-wrap items-center justify-center"> 
 
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
+              <div className="w-full px-4 lg:w-6/12 mb-6"> 
                 <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="text" name="first_name" placeholder="First Name" />
+                type="date" name="from" placeholder="From" />
               </div>
              
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
+              <div className="w-full px-4 lg:w-6/12 mb-6"> 
                 <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="text" name="last_name" placeholder="Last Name" />
+                type="date" name="to" placeholder="To" />
               </div>
   
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="text" name="email" placeholder="Email" />
-              </div>
-             
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="text" name="username" placeholder="Username" />
-              </div>
 
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <select name="role" className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                labelid="role-select-label" id="status-select" label="Role">
-                    <option value="">Select Role</option>
-                    <option value="administrator">Administrator</option>
-                    <option value="sap_api">Sap Api</option>
-                    <option value="customer">Customer</option>
-                    <option value="subscriber">Subscriber</option>
-                    <option value="shop_manager">Shop Manager</option>
-                    <option value="author">Author</option>
-                    <option value="editor">Editor</option>
-                </select> 
-              </div>
+              {pendingcsv &&  <div className="w-full lg:w-8/12 xl:w-12/12 px-4">
+                <button className="bg-green-500 active:bg-green-500 text-white text-center block font-bold 
+  uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 w-full" type="submit">Filter</button>
+            </div>}
 
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="password" name="password" placeholder="Password" />
-              </div>
 
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="text" name="address_1" placeholder="Address 1" />
-              </div>
-             
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="text" name="address_2" placeholder="Address 2" />
-              </div>
-
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="text" name="city" placeholder="City" />
-              </div>
-
-              <div className="w-full px-4 lg:w-6/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="number" name="postcode" placeholder="Post Code" />
-              </div>
-
-              <div className="w-full px-4 lg:w-6/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="number" name="phone" placeholder="Phone" />
-              </div>
-
-              <div className="w-full lg:w-8/12 xl:w-12/12 px-4">
-                <button className="bg-green-500 active:bg-green-500 text-white font-bold 
-  uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 w-full" type="submit">Save</button>
-            </div>
-
+            
+            {!pendingcsv &&  <div className="w-full lg:w-8/12 xl:w-12/12 px-4">
+              <CSVLink filename={csvfilename} className="bg-green-500 active:bg-green-500 text-white text-center block font-bold 
+  uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 w-full" data={csv} headers={headers}>
+              Download
+            </CSVLink></div>}
 
 
           </div>
@@ -622,67 +507,6 @@ const EditUser = async event => {
  uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" onClick={handleModalClose}>Cancel</button>
         </DialogActions>
       </Dialog>
-
-
-      {/* Edit User Modal  */}     
-
-      <Dialog open={editmodal} className="px-4 py-4">
-        <DialogTitle className="text-center mb-6"> Edit User</DialogTitle>
-        <DialogContent>
-          <form onSubmit={EditUser}>
-            <div className="flex flex-wrap items-center justify-center"> 
-
-            <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="text" name="first_name" placeholder="First Name" onChange={handleInputChange} value={formvalues.first_name}/>
-              </div>
-             
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="text" name="last_name" placeholder="Last Name" onChange={handleInputChange} value={formvalues.last_name}/>
-              </div>
-  
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="text" name="email" placeholder="Email" onChange={handleInputChange} value={formvalues.email}/>
-              </div>
-             
-             
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="text" name="address_2" placeholder="Street" onChange={handleInputChange} value={formvalues.street}/>
-              </div>
-
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="text" name="city" placeholder="City" onChange={handleInputChange} value={formvalues.city}/>
-              </div>
-
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="number" name="postcode" placeholder="Phone" onChange={handleInputChange} value={formvalues.phone}/>
-              </div>
-
-              <div className="w-full px-4 lg:w-4/12 mb-6"> 
-                <input className="px-3 py-3 placeholder-blueGray-500 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" 
-                type="number" name="phone" placeholder="Phone2" onChange={handleInputChange} value={formvalues.phone2}/>
-              </div>
-
-              <input type="hidden" name="id" value={formvalues.id}  />
-
-              <div className="w-full lg:w-8/12 xl:w-12/12 px-4">
-                <button className="bg-green-500 active:bg-green-500 text-white font-bold 
-  uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 w-full" type="submit">Save</button>
-            </div>
-          </div>
-         </form>
-        </DialogContent>
-        <DialogActions>
-          <button className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold 
- uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" onClick={handleEditModalClose}>Cancel</button>
-        </DialogActions>
-      </Dialog>
-
 
     </>
   );
