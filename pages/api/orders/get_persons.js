@@ -9,7 +9,7 @@ export default async (req, res) => {
     try {
 
         let today = new Date();
-        today.setHours(0, 0, 0, 0);
+        //today.setHours(0, 0, 0, 0);
 
 
         console.log('today', today)
@@ -24,7 +24,7 @@ export default async (req, res) => {
             }
         );
 
-        console.log('data',data)
+        //console.log('data',data)
 
         res.status(201).json({ success: true, data: data })
 
