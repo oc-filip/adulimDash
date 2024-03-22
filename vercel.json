@@ -1,11 +1,12 @@
 
 
 {
-    "crons": [
+    "crons": 
+    /*
     {
       "path": "/api/orders/get_unique_clients",
       "schedule": "*/2 * * * *"
-    },
+    },*/
     {
       "path": "/api/orders/get_persons",
       "schedule": "*/3 * * * *"
