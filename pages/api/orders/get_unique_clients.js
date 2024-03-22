@@ -11,12 +11,8 @@ export default async (req, res) => {
         case 'GET':
             try {
 
-                 let today = new Date();
-
-                console.log('today', today)
-
                 let query = AllOrders.find({is_cancelled:false,document_type:{$in:[1,2]}});
-                //query = query.skip(0).limit(500).sort({"document_number": -1 });
+
                 const orders = await query;
 
 
@@ -182,14 +178,16 @@ export default async (req, res) => {
 
                const userAverageData = userAverage;
 
-                
+               const count =  userAverageData.length;
+
                const dataSaved =  await OrdersGrouped.insertMany(userAverageData);
 
-              
+
 
 
                 res.status(200).json({ success: true,  data: dataSaved})
             } catch (error) {
+       
                 res.status(400).json({ success: false ,error: error});
             }
             break;
