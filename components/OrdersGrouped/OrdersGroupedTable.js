@@ -89,6 +89,12 @@ const columns = [
     selector:  row => row.UserID,
     sortable: true,
   },
+   {
+    name: 'Customer Name',
+    cell: row => <div className="flex flex-col"><p className="text-blueGray-500">row.LastOrder.customer_name </p></div>,,
+    selector:  row => row.LastOrder.customer_name,
+    sortable: true,
+  },
   {
     name: 'Last Order Date',
     selector:  row => row.LastOrderDate,
