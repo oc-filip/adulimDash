@@ -91,7 +91,7 @@ const columns = [
   },
    {
     name: 'Customer Name',
-    cell: row => <div className="flex flex-col"><p className="text-blueGray-500">row.LastOrder.customer_name </p></div>,,
+    cell: row => <div className="flex flex-col"><p className="text-blueGray-500">row.LastOrder.customer_name </p></div>,
     selector:  row => row.LastOrder.customer_name,
     sortable: true,
   },
