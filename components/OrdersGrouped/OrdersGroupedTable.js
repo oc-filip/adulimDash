@@ -83,7 +83,7 @@ export default function OrdersGroupedTable({totalOrders}) {
 const columns = [
   {
     name: 'User ID',
-    cell: row => <Link href={`ordersgrouped/${row.UserID}`}>
+    cell: row => <Link href={"https://invoice.rivhit.co.il/DocumentCopies.aspx?Customer=${row.UserID}"}>
       <a className="text-blueGray-700 font-bold uppercase"> {row.UserID}</a>
       </Link>,
     selector:  row => row.UserID,
@@ -130,7 +130,9 @@ const columns = [
     name: 'Pipedrive ID',
     selector: row => row.pipedrive_id,
     sortable: true,
-    cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{row.pipedrive_id} </p></div>,
+    cell: row => <Link href="https://adulim.pipedrive.com/person/${row.pipedrive_id}">
+      <a className="text-blueGray-700 font-bold uppercase"> {row.pipedrive_id}</a>
+      </Link>
   },
   /*
   {
