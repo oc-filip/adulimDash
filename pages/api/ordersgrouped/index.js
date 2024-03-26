@@ -22,7 +22,7 @@ export default async (req, res) => {
                     ]});
 
                 query = query.select('UserID LastOrder.customer_name NumOfOrders AverageFrequency LastOrderDate NextOrderDate pipedrive_id reccuring CallToUser Last5Avg' );
-                query = query.skip(skip).limit(per_page).sort({"pipedrive_id": -1 });
+                query = query.skip(skip).limit(per_page).sort({"UserID": -1 });
 
                 const data = await query;
 
