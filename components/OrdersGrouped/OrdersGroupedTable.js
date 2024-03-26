@@ -55,6 +55,7 @@ uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:ou
 export default function OrdersGroupedTable({totalOrders}) {
 
   const [modal, setModal] = useState(false);
+  const [selectStatus, setSelectStatus] = useState('');
   const [editmodal, setEditModal] = useState(false);
   const [formvalues,setFormValues] = useState({});
   const [open, setOpen] = useState(false);
@@ -233,10 +234,10 @@ const columns = [
   };
     
 
-  async function getCustomers(page = 1,  text= '') {
+  async function getCustomers(page = 1,  text= '' ,status=selectStatus) {
 
 
-      const res = await fetch(`${process.env.API_URL}/ordersgrouped?page=${page}&per_page=${countPerPage}&text=${text}`);
+      const res = await fetch(`${process.env.API_URL}/ordersgrouped?page=${page}&per_page=${countPerPage}&text=${text}&status=${status}`);
       const allcustomers = await res.json();
 
       setPersons(allcustomers.data);
@@ -257,7 +258,7 @@ const columns = [
     console.log('UseEffect Running');
     getCustomers(page , text); 
     
-  }, [page, text]);
+  }, [page, text,selectStatus]);
 
 
   
@@ -293,6 +294,23 @@ const columns = [
     setAlertContent(data.msg);
     setOpen(true);
   }
+
+
+
+
+  const changeOrdersStatus = async (status ,text = '')=> {
+    const res = await fetch(`${process.env.API_URL}/ordersgrouped?page=1&per_page=20&text=${text}&status=${status}`);
+  
+    const allcustomerss = await res.json();
+
+    setSelectStatus(status)
+    setPersons(allcustomerss.data);   
+
+  }
+
+
+
+
 
 
   const GetCsv = async event => {
@@ -438,7 +456,22 @@ const handleInputChange = e => {
  uppercase text-xs px-4 py-3 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" onClick={() => setModal(!modal)}>Download CSV</button>  
                   </div>}
 
-
+                  <label className="mr-1">Sort By</label>
+                    <select className="mr-1" labelid="status-select-label" id="status-select" label="Sort By" value={selectStatus} onChange={(e) => ChangeStatus(e.target.value)}>
+                      <option value="1">User ID (DESC)</option> 
+                      <option value="2">User ID (ASC)</option>
+                      <option value="3">Total Orders (DESC)</option>
+                      <option value="4">Total Orders (ASC)</option>
+                      <option value="5">AverageFrequency (DESC)</option>
+                      <option value="6">AverageFrequency (ASC)</option>
+                      <option value="7">Pipedrive ID (DESC)</option>
+                      <option value="8">Pipedrive ID (ASC)</option>
+                      <option value="9">Last Order Date (DESC)</option>
+                      <option value="10">Last Order Date (ASC)</option>
+                      <option value="11">Next Order Date (DESC)</option>
+                      <option value="12">Next Order Date (ASC)</option>
+                      
+                  </select> 
 
             <DataTable
             title
@@ -446,7 +479,7 @@ const handleInputChange = e => {
               data={persons}
               //actions={actionsMemo}
               //actions={actions}
-              contextActions={contextActions(deleteAll)}
+              //contextActions={contextActions(deleteAll)}
               sortIcon={sortIcon}
       				//selectableRowsComponent={Checkbox}
               sortFunction={customSort}
