@@ -87,30 +87,30 @@ const columns = [
       <a className="text-blueGray-700 font-bold uppercase"> {row.UserID}</a>
       </Link>,
     selector:  row => row.UserID,
-    sortable: true,
+    sortable: false,
   },
    {
     name: 'Customer Name',
     cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{row.LastOrder.customer_name} </p></div>,
     selector:  row => row.LastOrder.customer_name,
-    sortable: true,
+    sortable: false,
   },
   {
     name: 'Last Order Date',
     selector:  row => row.LastOrderDate,
-    sortable: true,
+    sortable: false,
     cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{toDate(row.LastOrderDate)} </p></div>,
   },
   {
     name: 'Next Order Date',
     selector:  row => row.NextOrderDate,
-    sortable: true,
+    sortable: false,
     cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{toDate(row.NextOrderDate)} </p></div>,
   },
   {
     name: 'Total Orders',
     selector:  row => row.NumOfOrders,
-    sortable: true,
+    sortable: false,
     cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{row.NumOfOrders} </p></div>,
   },
 
@@ -123,13 +123,13 @@ const columns = [
   {
     name: 'Last5 Avg',
     selector: row => row.Last5Avg,
-    sortable: true,
+    sortable: false,
     cell: row => <div className="flex flex-col"><p className="text-blueGray-500">{row.Last5Avg} </p></div>,
   },
   {
     name: 'Pipedrive ID',
     selector: row => row.pipedrive_id,
-    sortable: true,
+    sortable: false,
     cell: row => <Link href={`https://adulim.pipedrive.com/person/${row.pipedrive_id}`}>
       <a className="text-blueGray-700 font-bold uppercase"> {row.pipedrive_id}</a>
       </Link>
@@ -142,6 +142,7 @@ const columns = [
       <button onClick={() => editForm(row)} className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150">Edit</button>
       
   },*/
+/*
   {
     right: true,
     maxWidth: '120px',
@@ -149,7 +150,7 @@ const columns = [
     uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" 
     onClick={() => deleteUser(row.UserID)}>Delete
       </button>
-  },
+  },*/
 ];
 
   const customSort = (rows, selector, direction) => {
