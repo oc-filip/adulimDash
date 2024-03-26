@@ -296,8 +296,11 @@ const columns = [
   }
 
 
-
-
+  const ChangeStatus = async (selectedStatus) => {
+    
+      changeOrdersStatus(selectedStatus)
+    
+  };
   const changeOrdersStatus = async (status ,text = '')=> {
     const res = await fetch(`${process.env.API_URL}/ordersgrouped?page=1&per_page=20&text=${text}&status=${status}`);
   
