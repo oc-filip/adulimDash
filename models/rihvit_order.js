@@ -20,7 +20,7 @@ const RihvitOrderSchema = new mongoose.Schema({
     project_id: { type: Number },
     order:  { type: String },
 
-},{ collection: 'AllOrders' });
+},{ collection: 'allOrders' });
 
 
 module.exports = mongoose.models.Rihvit_Order || mongoose.model("Rihvit_Order", RihvitOrderSchema);
