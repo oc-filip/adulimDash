@@ -22,7 +22,7 @@ export default async (req, res) => {
                 console.log('Clients data received')
                 
                 const uniqueClients = Array.from(new Set(clients.map(client => client.customer_id))).map(customer_id => {
-                    const clientOrdersu = clients.filter(client => client.customer_id === customer_id)
+                    const clientOrders = clients.filter(client => client.customer_id === customer_id)
                         .sort((a, b) => {
                             const dateA = new Date(`${a.document_date.split('/').reverse().join('-')} ${a.document_time}`);
                             const dateB = new Date(`${b.document_date.split('/').reverse().join('-')} ${b.document_time}`);
@@ -32,14 +32,14 @@ export default async (req, res) => {
                     const frequency = [];
                     const amounts = [];
                 
-                    clientOrdersu.reverse();
+                    clientOrders.reverse();
 
 
 
 
                   
                 
-                    const slicedArray = clientOrdersu.slice(0,5);
+                    const slicedArray = clientOrders.slice(0,5);
 
                     for (let i = 0; i < slicedArray.length; i++) {
 
@@ -67,27 +67,26 @@ export default async (req, res) => {
                 
                     }   
                 
-                    clientOrders = clientOrdersu.slice(0,5);
-console.log('clientOrders',clientOrders)
+
 
                     
-                    for (let i = 0; i < clientOrders.length - 1; i++) {
+                    for (let i = 0; i < slicedArray.length - 1; i++) {
                        // if (clientOrders[i].document_type_name !== "חשבונית מס")
                         //{
                             //DocNotFit++;
                         //}
 
                         //if (clientOrders[i].document_type == 1 || clientOrders[i].document_type == 2) {
-                        const dateA = new Date(`${clientOrders[i].document_date.split('/').reverse().join('-')} ${clientOrders[i].document_time}`);
-                        const dateB = new Date(`${clientOrders[i + 1].document_date.split('/').reverse().join('-')} ${clientOrders[i + 1].document_time}`);
+                        const dateA = new Date(`${slicedArray[i].document_date.split('/').reverse().join('-')} ${slicedArray[i].document_time}`);
+                        const dateB = new Date(`${slicedArray[i + 1].document_date.split('/').reverse().join('-')} ${slicedArray[i + 1].document_time}`);
                         const timeDiff = Math.abs(dateB - dateA);
                         const diffDays = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
                         let DataToPush = {
                             "diffDays": diffDays,
                             "dateA": dateA,
                             "dateB": dateB,
-                            "orderA": clientOrders[i].document_number,
-                            "orderB": clientOrders[i + 1].document_number,
+                            "orderA": slicedArray[i].document_number,
+                            "orderB": slicedArray[i + 1].document_number,
                 
                         }
                         frequency.push(DataToPush);
@@ -111,7 +110,7 @@ console.log('clientOrders',clientOrders)
                         numAmounts: numAmounts,
                         totalAmounts: totalAmounts,
                         last5Avg: Math.round(last5),
-                        orders: clientOrders,
+                        orders: slicedArray,
                         orderNum: clientOrders.length,
                         frequency: frequency.length === 0 ? [{ "diffDays": 999 }] : frequency
                     }
