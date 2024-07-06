@@ -22,7 +22,7 @@ export default async (req, res) => {
                 console.log('Clients data received')
                 
                 const uniqueClients = Array.from(new Set(clients.map(client => client.customer_id))).map(customer_id => {
-                    const clientOrders = clients.filter(client => client.customer_id === customer_id)
+                    const clientOrdersu = clients.filter(client => client.customer_id === customer_id)
                         .sort((a, b) => {
                             const dateA = new Date(`${a.document_date.split('/').reverse().join('-')} ${a.document_time}`);
                             const dateB = new Date(`${b.document_date.split('/').reverse().join('-')} ${b.document_time}`);
@@ -32,18 +32,15 @@ export default async (req, res) => {
                     const frequency = [];
                     const amounts = [];
                 
-                    clientOrders.reverse();
+                    clientOrdersu.reverse();
 
 
-                    console.log('clientOrders',clientOrders)
 
 
-                     //clientOrders = clientOrders.slice(0,5)
+                  
                 
                     const slicedArray = clientOrders.slice(0,5);
-                                        console.log('slicedArray',slicedArray)
 
-                    
                     for (let i = 0; i < slicedArray.length; i++) {
 
                 
@@ -56,6 +53,10 @@ export default async (req, res) => {
                 
                        
                     }    
+
+                    clientOrders = clientOrdersu.slice(0,5);
+
+                    
                     let totalAmounts = 0;
                     let numAmounts = 0;
                     let last5;
