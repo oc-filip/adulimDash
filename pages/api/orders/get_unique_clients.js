@@ -39,7 +39,7 @@ export default async (req, res) => {
 
                   
                 
-                    const slicedArray = clientOrders.slice(0,5);
+                    const slicedArray = clientOrdersu.slice(0,5);
 
                     for (let i = 0; i < slicedArray.length; i++) {
 
@@ -54,7 +54,6 @@ export default async (req, res) => {
                        
                     }    
 
-                    clientOrders = clientOrdersu.slice(0,5);
 
                     
                     let totalAmounts = 0;
@@ -68,7 +67,10 @@ export default async (req, res) => {
                 
                     }   
                 
-                       
+                    clientOrders = clientOrdersu.slice(0,5);
+console.log('clientOrders',clientOrders)
+
+                    
                     for (let i = 0; i < clientOrders.length - 1; i++) {
                        // if (clientOrders[i].document_type_name !== "חשבונית מס")
                         //{
