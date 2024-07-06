@@ -35,9 +35,11 @@ export default async (req, res) => {
                     clientOrders.reverse();
 
 
-                     clientOrders.slice(0,5)
+                     //clientOrders = clientOrders.slice(0,5)
                 
                     const slicedArray = clientOrders.slice(0,5);
+                    clientOrders = slicedArray;
+                    
                     for (let i = 0; i < slicedArray.length; i++) {
 
                 
