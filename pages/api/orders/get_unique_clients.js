@@ -11,7 +11,7 @@ export default async (req, res) => {
         case 'GET':
             try {
 
-                let query = AllOrders.find({customer_id:122,is_cancelled:false,document_type:{$in:[1,2]}});
+                let query = AllOrders.find({is_cancelled:false,document_type:{$in:[1,2]}});
 
                 const orders = await query;
 
