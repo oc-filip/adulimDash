@@ -186,14 +186,14 @@ export default async (req, res) => {
 
                const userAverageData = userAverage;
 
-               const count =  userAverageData.length;
+               //const count =  userAverageData.length;
 
-               //const dataSaved =  await OrdersGrouped.insertMany(userAverageData);
-
-
+               const dataSaved =  await OrdersGrouped.insertMany(userAverageData);
 
 
-                res.status(200).json({ success: true,  count:count , data: userAverageData})
+
+
+                res.status(200).json({ success: true,  data: userAverageData})
             } catch (error) {
        
                 res.status(400).json({ success: false ,error: error});
